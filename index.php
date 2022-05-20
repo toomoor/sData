@@ -41,6 +41,7 @@ $result = $con->query($sql);
     if ($result->num_rows > 0) {
       // output data of each row
       foreach ($result as $row) {
+        if($row["action"] == 1){
         ?>
       <tr>
         <td><?= $row["fname"] ?></td>
@@ -48,13 +49,14 @@ $result = $con->query($sql);
         <td><?= $row["pnum"] ?></td>
         <td>
           <div class="btn-group btn-group-lg">
-            <a class="btn btn-danger" href="detele.php?id=<?= $row["id"] ?>">Delete</a>
+            <a class="btn btn-danger" href="delete.php?id=<?= $row["id"] ?>">Delete</a>
             <a class="btn btn-primary" href="update.php?id=<?= $row["id"] ?>">Update</a>
             <a class="btn btn-warning" href="view.php?id=<?= $row["id"] ?>">View</a>
           </div>
         </td>
       </tr>
         <?php
+        }
       }
     }
     ?>
