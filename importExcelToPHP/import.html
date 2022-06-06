@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Add New</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../index.php">List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../insert.php">Add New</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link disabled" href="#">Import</a>
+      </li>
+    </ul>
+  </nav>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <form method="post" action="import_file.php" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="usr">File :</label>
+            <input type="file" class="form-control" id="file" name="file">
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary" name="submit_file">Upload File</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-6">
+      
+    
+    </div>
+    
+  </div>
+</div>
+
+</body>
+</html>
