@@ -133,6 +133,22 @@ class CRUD {
         $this->con->close();
         return $list;
     }
+
+    function showTables(){
+        $this->database();
+        $this->sql = "SHOW TABLES";
+        $this->rSql = $this->con->query($this->sql);
+        $list = array();
+        while($data = $this->rSql->fetch_array()){
+            $list[] =  $data;
+        }
+        $this->con->close();
+        return $list;
+    }
+    function mergeTables($table1,$table2){
+        $this->database();
+        $this->sql = "";
+    }
 }
 
 ?>
