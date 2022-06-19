@@ -1,4 +1,10 @@
 <?php
+session_start();
+if(isset($_POST["tablen"])){
+    $tableName = $_POST["tablen"];
+    $_SESSION["tablen"] = $tableName;
+}
+
 #defind database info
 $host = "localhost";
 $username = "boy";
@@ -11,7 +17,7 @@ if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 // Database Structure 
-$sql = "CREATE TABLE IF NOT EXISTS names (
+$sql = "CREATE TABLE IF NOT EXISTS $tableName (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     fname VARCHAR(30) NOT NULL,
     lname VARCHAR(30) NOT NULL)";
@@ -32,7 +38,7 @@ if(isset($_POST["submit_file"])){
         $fname = $csv[0];
         $lname = $csv[1];
 
-        $sql = "INSERT INTO names (fname, lname) VALUES ('$fname','$lname')";
+        $sql = "INSERT INTO $tableName (fname, lname) VALUES ('$fname','$lname')";
         if (($fname == NULL && $lname != NULL) || $fname == TRUE){
             if($con->query($sql) === TRUE){
                 #echo "insert into done.";

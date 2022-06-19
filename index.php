@@ -37,6 +37,9 @@ $result2 = $con->query($sql2);
       <li class="nav-item">
         <a class="nav-link" href="importExcelToPHP/import.html">Import</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="MargeTables/">Marge Tables</a>
+      </li>
     </ul>
   </nav>
 <div class="container">
@@ -79,7 +82,7 @@ $result2 = $con->query($sql2);
   </div>
   <div class="row">
   <div class="col-sm-6">
-      <h4>Next feature : Import Databases.</h4>
+      <!--<h4>Next feature : Import Databases.</h4>-->
     
     </div>
   </div>

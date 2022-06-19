@@ -1,6 +1,14 @@
 <?php include("../database.php");
+include_once("../crud.php");
+$connection = new CRUD();
+session_start();
+$tableName = $_SESSION['tablen'];
+$tables = $connection->showTables();
+#print_r($tables);
+#echo $tables[2][0];
+#die();
 
-$sql = "SELECT * FROM names";
+$sql = "SELECT * FROM $tableName";
 $result = $con->query($sql);
 ?>
 <!DOCTYPE html>
@@ -10,7 +18,7 @@ $result = $con->query($sql);
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -18,53 +26,83 @@ $result = $con->query($sql);
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">List</a>
+        <a class="nav-link" href="../index.php">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="insert.html">Add New</a>
+        <a class="nav-link" href="../insert.html">Add New</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="import.html">Import</a>
       </li>
     </ul>
+    <div class="form-inline ml-auto">
+      <input class="form-control mr-sm-2" type="input" id="search" placeholder="Search.." aria-label="Search" />
+      <button class="btn btn-light my-sm-0" id="searchBtn">Search</button>
+    </div>
   </nav>
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text">Table Show</label>
+        </div>
+        <select class="custom-select" id="tableShow">
+        <?php
+        $i=0;
+        if(count($tables) > 0){
+          foreach($tables as $option){
+        ?>
+          <option <?= ($tableName == $option[0]) ? "selected" : ""?> value="<?= $option[0]?>"><?= $option[0]?></option>
+        <?php
+          }
+        }
+
+        ?>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-12">
     <table class="table table-hover">
     <thead class="thead-light">
       <tr>
+        <th>#</th>
         <th>Firstname</th>
         <th>Lastname</th>
         <th></th>
       </tr>
     </thead>
-    <?php
-    if ($result->num_rows > 0) {
-      // output data of each row
-      foreach ($result as $row) {
-        ?>
-      <tr>
-        <td><?= $row["fname"] ?></td>
-        <td><?= $row["lname"] ?></td>
-        <td>
-          <div class="btn-group btn-group-lg">
-            <a class="btn btn-danger" href="detele.php?id=<?= $row["id"] ?>">Delete</a>
-            <a class="btn btn-primary" href="update.php?id=<?= $row["id"] ?>">Update</a>
-            <a class="btn btn-warning" href="view.php?id=<?= $row["id"] ?>">View</a>
-          </div>
-        </td>
-      </tr>
-        <?php
+    <tbody id="show">
+      <?php
+      if ($result->num_rows > 0) {
+        $i=0;
+        // output data of each row
+        foreach ($result as $row) {
+          ?>
+        <tr>
+          <td><?= ++$i;?></td>
+          <td><?= $row["fname"] ?></td>
+          <td><?= $row["lname"] ?></td>
+          <td>
+            <!--<div class="btn-group btn-group-lg">
+              <a class="btn btn-danger" href="detele.php?id=#">Delete</a>
+              <a class="btn btn-primary" href="update.php?id=#">Update</a>
+              <a class="btn btn-warning" href="view.php?id=#">View</a>
+            </div>-->
+          </td>
+        </tr>
+      <?php
+        }
       }
-    }
-    ?>
-    <tbody>
+      ?>
     </tbody>
   </table>
     </div>    
   </div>
   <div class="row">
   <div class="col-sm-6">
-        <h4>New feature : Import CSV to php Databases.</h4>
-        <h4>Next feature : Import Databases.</h4>
+        <!--<h4>New feature : Import CSV to php Databases.</h4>
+        <h4>Next feature : Import Databases.</h4>-->
     
     </div>
   </div>
@@ -72,3 +110,73 @@ $result = $con->query($sql);
 
 </body>
 </html>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#tableShow").change(function(){
+      var select = $(this).val();
+      // alert(select);
+
+      if(select != ""){
+        //alert("we go in IF normal");
+        $.ajax({
+          
+          url:"tableLoad.php",
+          method:"POST",
+          data:{tableSelect:select},
+
+          success:function(data){
+            //alert("we go in SUCCESS normal");
+            $("#show").html(data);
+          },
+        });
+      }else{
+        alert("we don't go in IF normal");
+        // $.ajax({
+          
+        //   url:"search.php",
+        //   method:"POST",
+        //   data:{search:input},
+
+        //   success:function(data){
+        //     $("#show").html(data);
+        //   }
+        // });
+      }
+    });
+    $("#searchBtn").click(function(){
+      var search = $("#search").val();
+      var select = $("#tableShow").val();
+      //alert(input);
+
+      if(search != ""){
+        $.ajax({
+          
+          url:"search.php",
+          method:"POST",
+          data:{
+            search:search,
+            tableSelect:select,
+          },
+
+          success:function(data){
+            $("#show").html(data);
+          }
+        });
+      }else{
+        $.ajax({
+          
+          url:"search.php",
+          method:"POST",
+          data:{
+            search:input,
+            tableSelect:select,
+          },
+
+          success:function(data){
+            $("#show").html(data);
+          }
+        });
+      }
+    });
+  });
+</script>
