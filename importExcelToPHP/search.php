@@ -6,17 +6,17 @@ if(isset($_POST['search']) && $_POST['tableSelect']){
     $table = $_POST['tableSelect'];
 
 $where = array(
-    "fname" => $search,
-    "lname" => $search,
+    $table."_fname" => $search,
+    $table."_lname" => $search,
 );
 $result = $connection->search($table,$where);
 
 if(count($result) > 0){
     foreach ($result as $key => $value) {?>
         <tr>
-            <td><?= $value['id'] ?></td>
-            <td><?= $value['fname'] ?></td>
-            <td><?= $value['lname'] ?></td>
+            <td><?= $value[$table."_id"] ?></td>
+            <td><?= $value[$table."_fname"] ?></td>
+            <td><?= $value[$table."_lname"] ?></td>
             <td>
             <!--<div class="btn-group btn-group-lg">
                 <a onclick="return confirm('Are you sure you want to delete')" class="btn btn-danger" href="?delete_id=#">Delete</a>

@@ -34,6 +34,9 @@ $tables = $connection->showTables();
       <li class="nav-item active">
         <a class="nav-link disabled" href="#">Marge Tables</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../importExcelToPHP/view.php">View Tables</a>
+      </li>
     </ul>
   </nav>
 <div class="container">

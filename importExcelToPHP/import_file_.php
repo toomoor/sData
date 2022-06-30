@@ -1,15 +1,9 @@
 <?php
-session_start();
-if(isset($_POST["tablen"])){
-    $tableName = $_POST["tablen"];
-    $_SESSION["tablen"] = $tableName;
-}
-
 #defind database info
-$host = "localhost";
-$username = "boy";
-$password = "12345";
-$database = "database";
+$host = "sql110.unaux.com";
+$username = "unaux_31726220";
+$password = "8bgna7xfc2";
+$database = "unaux_31726220_database";
 
 $con = new mysqli($host, $username, $password, $database);
 
@@ -17,10 +11,10 @@ if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 // Database Structure 
-$sql = "CREATE TABLE IF NOT EXISTS ".$tableName." (
-    ".$tableName."_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ".$tableName."_fname VARCHAR(30) NOT NULL,
-    ".$tableName."_lname VARCHAR(30) NOT NULL)";
+$sql = "CREATE TABLE IF NOT EXISTS names (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    fname VARCHAR(30) NOT NULL,
+    lname VARCHAR(30) NOT NULL)";
 if($con->query($sql) === TRUE){
     #echo "Table created :)";
 }else{
@@ -38,7 +32,7 @@ if(isset($_POST["submit_file"])){
         $fname = $csv[0];
         $lname = $csv[1];
 
-        $sql = "INSERT INTO ".$tableName." (".$tableName."_fname, ".$tableName."_lname) VALUES ('$fname','$lname')";
+        $sql = "INSERT INTO names (fname, lname) VALUES ('$fname','$lname')";
         if (($fname == NULL && $lname != NULL) || $fname == TRUE){
             if($con->query($sql) === TRUE){
                 #echo "insert into done.";

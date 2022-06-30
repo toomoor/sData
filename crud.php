@@ -2,10 +2,7 @@
 class CRUD {
     private $myfile,$i,$tmp,$result;
 
-    private $host;
-    private $username;
-    private $password;
-    private $database;
+    private $host, $username, $password, $database;
 
     private $con;
     private $sql,$rSql;
@@ -145,10 +142,118 @@ class CRUD {
         $this->con->close();
         return $list;
     }
-    function mergeTables($table1,$table2){
+
+    function getColumnsName($table){
         $this->database();
-        $this->sql = "";
+        $this->sql = "SHOW COLUMNS FROM ".$table;
+        $this->rSql = $this->con->query($this->sql);
+        $list = array();
+        while($data = $this->rSql->fetch_array()){
+            $list[] = $data;
+        }
+        return $list;
     }
+
+    function MergeTable($table1,$table2){
+        $this->database();
+        $cTable1 = "";
+        $cTable2 = "";
+        $columnsTable1 = $this->getColumnsName($table1);
+        for ($i=1; $i<count($columnsTable1); $i++){
+            $cTable1 .= $columnsTable1[$i]['Field']. ", ";
+        }
+        $cTable1 = substr($cTable1, 0, -2);
+        $columnsTable2 = $this->getColumnsName($table2);
+        for ($i=1; $i<count($columnsTable2); $i++){
+            $cTable2 .= $columnsTable2[$i]['Field']. ", ";
+        }
+        $cTable2 = substr($cTable2, 0, -2);
+
+        $mergeName = "m_".rand(1000,9999);
+        $this->sql = "CREATE TABLE IF NOT EXISTS ".$mergeName.
+            "(".$mergeName."_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY)".
+            " AS SELECT $cTable1 FROM $table1 UNION ALL SELECT $cTable2 FROM $table2"; 
+        if($this->con->query($this->sql) === FALSE){
+            if(strlen($cTable2) > strlen($cTable1)){
+                $cTable1 = "";
+                $cTable2 = "";
+                $this->sql = "CREATE TABLE IF NOT EXISTS ".$mergeName.
+                    " LIKE ".$table2;
+                $this->con->query($this->sql);
+                $less = count($columnsTable2) - count($columnsTable1);
+                for($i=1; $i <= $less; $i++){
+                    $cTable2 .= $columnsTable2[$i]['Field']. ", ";
+                }
+                $cTable2 = substr($cTable2, 0, -2);
+                for($i=1; $i<count($columnsTable1); $i++){
+                    $cTable1 .= $columnsTable1[$i]['Field']. ", ";
+                }
+                $cTable1 = substr($cTable1, 0, -2);
+                $this->sql = "INSERT INTO ".$mergeName.
+                    "(".$cTable2.") SELECT ".$cTable1." FROM ".$table1;
+                $this->con->query($this->sql);
+                $cTable2 = "";
+                for($i=1; $i<count($columnsTable2); $i++){
+                    $cTable2 .= $columnsTable2[$i]['Field']. ", ";
+                }
+                $cTable2 = substr($cTable2, 0, -2);
+                $this->sql = "INSERT INTO ".$mergeName.
+                    "(".$cTable2.") SELECT ".$cTable2." FROM ".$table2;
+                $this->con->query($this->sql);
+            }else{
+                $cTable1 = "";
+                $cTable2 = "";
+                $this->sql = "CREATE TABLE IF NOT EXISTS ".$mergeName.
+                    " LIKE ".$table1;
+                $this->con->query($this->sql);
+                $less = count($columnsTable1) - count($columnsTable2);
+                for($i=1; $i <= $less; $i++){
+                    $cTable1 .= $columnsTable1[$i]['Field']. ", ";
+                }
+                $cTable1 = substr($cTable1, 0, -2);
+                for($i=1; $i<count($columnsTable2); $i++){
+                    $cTable2 .= $columnsTable2[$i]['Field']. ", ";
+                }
+                $cTable2 = substr($cTable2, 0, -2);
+                $this->sql = "INSERT INTO ".$mergeName.
+                    "(".$cTable1.") SELECT ".$cTable2." FROM ".$table2;
+                $this->con->query($this->sql);
+                $cTable1 = "";
+                for($i=1; $i<count($columnsTable1); $i++){
+                    $cTable1 .= $columnsTable1[$i]['Field']. ", ";
+                }
+                $cTable1 = substr($cTable1, 0, -2);
+                $this->sql = "INSERT INTO ".$mergeName.
+                    "(".$cTable1.") SELECT ".$cTable1." FROM ".$table1;
+                $this->con->query($this->sql);
+            }
+        }        
+        $this->con->close();
+        return $mergeName;
+    }
+    
+    function DropDuplicate($table){
+        $cCTable = "";
+        $this->database();
+        $this->sql = "CREATE TABLE t_".$table." LIKE ".$table;
+        $this->con->query($this->sql);
+        $cTable = $this->getColumnsName($table);
+        for ($i=1; $i<count($cTable); $i++){
+            $cCTable .= $cTable[$i]['Field']. ", ";
+        }
+        $cCTable = substr($cCTable, 0, -2);
+        $this->sql = "ALTER TABLE t_".$table." ADD UNIQUE(".$cCTable.")";
+        $this->con->query($this->sql);
+        $this->sql = "INSERT IGNORE INTO t_".$table." SELECT * FROM ".$table;
+        $this->con->query($this->sql);
+        $this->sql = "RENAME TABLE ".$table." TO old_".$table.
+            ", t_".$table." TO ".$table;
+        $this->con->query($this->sql);
+        $this->sql = "DROP TABLE old_".$table;
+        $this->con->query($this->sql);
+        $this->con->close();
+    }
+    
 }
 
 ?>

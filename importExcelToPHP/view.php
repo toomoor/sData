@@ -2,13 +2,17 @@
 include_once("../crud.php");
 $connection = new CRUD();
 session_start();
-$tableName = $_SESSION['tablen'];
+@$tableName = $_SESSION['tablen'];
 $tables = $connection->showTables();
-#print_r($tables);
-#echo $tables[2][0];
-#die();
-
-$sql = "SELECT * FROM $tableName";
+// print_r($tables);
+// echo $tables[0][0];
+// die();
+if($tableName == NULL){
+  $sql = "SELECT * FROM ".$tables[0][0];
+}else{
+  $sql = "SELECT * FROM $tableName";
+}
+$rColumns = $connection->getColumnsName($tables[0][0]);
 $result = $con->query($sql);
 ?>
 <!DOCTYPE html>
@@ -33,6 +37,9 @@ $result = $con->query($sql);
       </li>
       <li class="nav-item">
         <a class="nav-link" href="import.html">Import</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../MargeTables">MargeTables</a>
       </li>
     </ul>
     <div class="form-inline ml-auto">
@@ -80,9 +87,9 @@ $result = $con->query($sql);
         foreach ($result as $row) {
           ?>
         <tr>
-          <td><?= ++$i;?></td>
-          <td><?= $row["fname"] ?></td>
-          <td><?= $row["lname"] ?></td>
+          <td><?= $row[$rColumns[0]["Field"]] ?></td>
+          <td><?= $row[$rColumns[1]["Field"]] ?></td>
+          <td><?= $row[$rColumns[2]["Field"]] ?></td>
           <td>
             <!--<div class="btn-group btn-group-lg">
               <a class="btn btn-danger" href="detele.php?id=#">Delete</a>
@@ -168,7 +175,7 @@ $result = $con->query($sql);
           url:"search.php",
           method:"POST",
           data:{
-            search:input,
+            search:search,
             tableSelect:select,
           },
 
