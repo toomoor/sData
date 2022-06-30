@@ -5,18 +5,20 @@ if(isset($_POST['search']) && $_POST['tableSelect']){
     $search = $_POST['search'];
     $table = $_POST['tableSelect'];
 
+    $cTable = $connection->getColumnsName($table);
+
 $where = array(
-    $table."_fname" => $search,
-    $table."_lname" => $search,
+    $cTable[1]['Field'] => $search,
+    $cTable[2]['Field'] => $search,
 );
 $result = $connection->search($table,$where);
 
 if(count($result) > 0){
     foreach ($result as $key => $value) {?>
         <tr>
-            <td><?= $value[$table."_id"] ?></td>
-            <td><?= $value[$table."_fname"] ?></td>
-            <td><?= $value[$table."_lname"] ?></td>
+            <td><?= $value[$cTable[0]['Field']] ?></td>
+            <td><?= $value[$cTable[1]['Field']] ?></td>
+            <td><?= $value[$cTable[2]['Field']] ?></td>
             <td>
             <!--<div class="btn-group btn-group-lg">
                 <a onclick="return confirm('Are you sure you want to delete')" class="btn btn-danger" href="?delete_id=#">Delete</a>
@@ -34,12 +36,14 @@ Data Not Found...
     $table = $_POST['tableSelect'];
     $result = $connection->Read($table);
 
+    $cTable = $connection->getColumnsName($table);
+
     if(count($result) > 0){
         foreach ($result as $key => $value) {?>
             <tr>
-                <td><?= $value['id'] ?></td>
-                <td><?= $value['fname'] ?></td>
-                <td><?= $value['lname'] ?></td>
+                <td><?= $value[$cTable[0]['Field']] ?></td>
+                <td><?= $value[$cTable[1]['Field']] ?></td>
+                <td><?= $value[$cTable[2]['Field']] ?></td>
                 <td>
                 <!--<div class="btn-group btn-group-lg">
                     <a onclick="return confirm('Are you sure you want to delete')" class="btn btn-danger" href="?delete_id=#">Delete</a>
