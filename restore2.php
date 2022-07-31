@@ -2,14 +2,14 @@
 
 $id = $_GET['id'];
 if($id != 'all'){
-  $sql = "UPDATE userdata SET `action` = '1' WHERE id = $id";
+  $sql = "UPDATE userdata SET `userdata_action` = '1' WHERE userdata_id = $id";
 }elseif($id == 'all'){
-  $sql = "UPDATE userdata SET `action` = '1'";
+  $sql = "UPDATE userdata SET `userdata_action` = '1'";
 }
 
 $result = $con->query($sql);
 
-$sql2 = "SELECT * FROM userdata WHERE `action` = '0'";
+$sql2 = "SELECT * FROM userdata WHERE `userdata_action` = '0'";
 $result2 = $con->query($sql2);
 
 

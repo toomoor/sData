@@ -1,6 +1,6 @@
 <?php include("database.php");
 
-$sql = "SELECT * FROM userdata WHERE `action` = '0'";
+$sql = "SELECT * FROM userdata WHERE `userdata_action` = '0'";
 //$sql2 = "SELECT * FROM userdata WHERE action = 0";
 $result = $con->query($sql);
 //$result2 = $con->query($sql2);
@@ -11,10 +11,7 @@ $result = $con->query($sql);
   <title>Welcome to Phonenote</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <?php include("resource/resource.php"); ?>
 </head>
 <body>
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -23,7 +20,7 @@ $result = $con->query($sql);
         <a class="nav-link" href="index.php">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="insert.html">Add New</a>
+        <a class="nav-link" href="insert.php">Add New</a>
       </li>
       <?php
       if ($result->num_rows > 0) {
@@ -58,12 +55,12 @@ $result = $con->query($sql);
       foreach ($result as $row) {
         ?>
       <tr>
-        <td><?= $row["fname"] ?></td>
-        <td><?= $row["lname"] ?></td>
-        <td><?= $row["pnum"] ?></td>
+        <td><?= $row["userdata_fname"] ?></td>
+        <td><?= $row["userdata_lname"] ?></td>
+        <td><?= $row["userdata_pnum"] ?></td>
         <td>
           <div class="btn-group btn-group-lg">
-            <a class="btn btn-primary" href="restore2.php?id=<?= $row["id"] ?>">Restore</a>
+            <a class="btn btn-primary" href="restore2.php?id=<?= $row["userdata_id"] ?>">Restore</a>
           </div>
         </td>
       </tr>
@@ -77,8 +74,8 @@ $result = $con->query($sql);
     </div>    
   </div>
   <div class="row">
-  <div class="col-sm-6">
-      <h4>Next feature : Import Databases.</h4>
+    <div class="col-sm-6">
+      <!--<h4>Next feature : Import Databases.</h4>-->
     </div>
   </div>
 </div>

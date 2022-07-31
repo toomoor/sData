@@ -3,7 +3,7 @@ include_once("database.php");
 
 $id = $_GET['id'];
 
-$sql = "UPDATE userdata SET `action`='0' WHERE id=$id";
+$sql = "UPDATE userdata SET `userdata_action`='0' WHERE userdata_id=$id";
 
 if ($con->query($sql) === TRUE) {
   //echo "Record updated successfully";

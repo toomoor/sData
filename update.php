@@ -2,12 +2,12 @@
 
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM userdata WHERE id=$id";
+$sql = "SELECT * FROM userdata WHERE userdata_id=$id";
 $result = $con->query($sql);
 foreach($result as $row){
-$fname = $row['fname'];
-$lname = $row['lname'];
-$pnum = $row['pnum'];
+$fname = $row['userdata_fname'];
+$lname = $row['userdata_lname'];
+$pnum = $row['userdata_pnum'];
 $con->close();
 }
 ?>
@@ -17,10 +17,7 @@ $con->close();
   <title>Updating <?php echo $fname." ".$lname;?></title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <?php include("resource/resource.php"); ?>
 </head>
 <body>
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -29,7 +26,7 @@ $con->close();
         <a class="nav-link" href="index.php">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="insert.html">Add New</a>
+        <a class="nav-link" href="insert.php">Add New</a>
       </li>
     </ul>
   </nav>

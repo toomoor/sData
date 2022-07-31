@@ -1,18 +1,19 @@
-<?php include("../database.php");
+<?php 
+include("../database.php");
 include_once("../crud.php");
 $connection = new CRUD();
 session_start();
 @$tableName = $_SESSION['tablen'];
 $tables = $connection->showTables();
-// print_r($tables);
-// echo $tables[0][0];
-// die();
+
 if($tableName == NULL){
   $sql = "SELECT * FROM ".$tables[0][0];
+  $rColumns = $connection->getColumnsName($tables[0][0]);
 }else{
   $sql = "SELECT * FROM $tableName";
+  $rColumns = $connection->getColumnsName($tableName);
 }
-$rColumns = $connection->getColumnsName($tables[0][0]);
+
 $result = $con->query($sql);
 ?>
 <!DOCTYPE html>
@@ -21,10 +22,7 @@ $result = $con->query($sql);
   <title>Import CSV to php</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <?php include("../resource/resource.php"); ?>
 </head>
 <body>
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -33,10 +31,10 @@ $result = $con->query($sql);
         <a class="nav-link" href="../index.php">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="../insert.html">Add New</a>
+        <a class="nav-link" href="../insert.php">Add New</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="import.html">Import</a>
+        <a class="nav-link" href="import.php">Import</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="../MargeTables">MargeTables</a>

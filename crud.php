@@ -8,7 +8,31 @@ class CRUD {
     private $sql,$rSql;
 
     function __construct(){
-        $this->myfile = fopen("define.txt", "r") or die("Unable to open file!"); #define.txt opening
+        #region defineAddress
+        $defineAd = "define.txt";
+        $defineAdInd = 0;
+        $addr = $_SERVER['PHP_SELF'];
+        #echo $addr ; die();
+        if($addr == "/_sdata/MargeTables/index.php" ||
+           $addr == "/_sdata/MargeTables/merge.php" ||
+           $addr == "/_sdata/importExcelToPHP/view.php" ||
+           $addr == "/_sdata/importExcelToPHP/search.php" ||
+           $addr == "/_sdata/importExcelToPHP/tableLoad.php")
+        $defineAdInd = 1;
+        elseif($addr == "/_sdata/index.php" ||
+               $addr == "/_sdata/restore.php" ||
+               $addr == "/_sdata/search.php" ||
+               $addr == "/_sdata/update.php")
+        $defineAdInd = 0;
+        switch($defineAdInd){
+            case 1:
+                $defineAd = "../define.txt";
+            break;
+            default:
+                $defineAd = "define.txt";
+        }
+        #endregion
+        $this->myfile = fopen($defineAd, "r") or die("Unable to open file!"); #define.txt opening
 
         $this->tmp = explode(",", fgets($this->myfile));
 

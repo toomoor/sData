@@ -6,10 +6,10 @@ $lname = $_POST['lname'];
 $pnum = $_POST['pnum'];
 
 $sql = "UPDATE userdata SET 
-    fname = '$fname',
-    lname = '$lname',
-    pnum = '$pnum'    
-    WHERE id=$id";
+    userdata_fname = '$fname',
+    userdata_lname = '$lname',
+    userdata_pnum = '$pnum'    
+    WHERE userdata_id=$id";
 
 if ($con->query($sql) === TRUE) {
     //echo "Record updated successfully";
